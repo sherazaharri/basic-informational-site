@@ -1,52 +1,55 @@
-const http = require('node:http');
-const fs = require('fs').promises;
+const express = require("express");
+const app = express();
 
-const host = 'localhost';
-const port = 8080;
+const fs = require('fs').promises;
 let indexFile;
 
-const requestListener = function (req, res) {
-  switch(req.url){
-    case "/":
-      fs.readFile(__dirname + "/index.html")
-         .then(contents => {
-          indexFile = contents
-          res.setHeader("Content-Type", "text/html"); //tells the client we are returning HTML content
-          res.writeHead(200);
-          res.end(indexFile); //res.end handles what gets sent to the client
-        })
-      break;
-    case "/about":
-      fs.readFile(__dirname + "/about.html")
-        .then(contents => {
-          indexFile = contents
-          res.setHeader("Content-Type", "text/html"); //tells the client we are returning HTML content
-          res.writeHead(200);
-          res.end(indexFile); //res.end handles what gets sent to the client
-        })
-      break;
-    case "/contact-me":
-      fs.readFile(__dirname + "/contact-me.html")
-        .then(contents => {
-          indexFile = contents
-          res.setHeader("Content-Type", "text/html"); //tells the client we are returning HTML content
-          res.writeHead(200);
-          res.end(indexFile); //res.end handles what gets sent to the client
-        })
-      break;
-    default:
-      fs.readFile(__dirname + "/404.html")
-        .then(contents => {
-          indexFile = contents
-          res.setHeader("Content-Type", "text/html"); //tells the client we are returning HTML content
-          res.writeHead(404);
-          res.end(indexFile); //res.end handles what gets sent to the client
-        })
+app.get("/", (req, res) => 
+  fs.readFile(__dirname + "/index.html")
+    .then(contents => {
+      indexFile = contents
+      res.setHeader("Content-Type", "text/html"); //tells the client we are returning HTML content
+      res.writeHead(200);
+      res.end(indexFile); //res.end handles what gets sent to the client
+    })
+);
+
+app.get("/about", (req, res) => 
+  fs.readFile(__dirname + "/about.html")
+    .then(contents => {
+      indexFile = contents
+      res.setHeader("Content-Type", "text/html"); //tells the client we are returning HTML content
+      res.writeHead(200);
+      res.end(indexFile); //res.end handles what gets sent to the client
+    })
+);
+
+app.get("/contact-me", (req, res) => 
+  fs.readFile(__dirname + "/contact-me.html")
+    .then(contents => {
+      indexFile = contents
+      res.setHeader("Content-Type", "text/html"); //tells the client we are returning HTML content
+      res.writeHead(200);
+      res.end(indexFile); //res.end handles what gets sent to the client
+    })
+);
+
+app.use((req, res) => {
+  fs.readFile(__dirname + "/404.html")
+    .then(contents => {
+      res.setHeader("Content-Type", "text/html");
+      res.writeHead(404);
+      res.end(contents);
+    })
+});
+
+const PORT = 3300;
+app.listen(PORT, (error) => {
+  // This is important!
+  // Without this, any startup errors will silently fail
+  // instead of giving you a helpful error message.
+  if (error) {
+    throw error;
   }
-};
-
-const server = http.createServer(requestListener); //accepts HTTP requests and passes to requestListener
-
-server.listen(port, host, () => {
-  console.log(`Server is running on http://${host}:${port}`
-)});
+  console.log(`My first Express app - listening on port ${PORT}!`);
+});
