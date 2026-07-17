@@ -34,7 +34,7 @@ app.get("/contact-me", (req, res) =>
     })
 );
 
-app.use((req, res) => {
+app.get("/{*splat}",(req, res) => {
   fs.readFile(__dirname + "/404.html")
     .then(contents => {
       res.setHeader("Content-Type", "text/html");
