@@ -1,0 +1,1 @@
+Created to understand the basics of creating a server and serving pages using Node.js
